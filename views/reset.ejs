@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+      <meta charset="utf-8">
+      <title>Sentry - Reset</title>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" type="text/css" href="/assets/css/login.css">
+      <!-- Stripe -->
+      <script src="https://js.stripe.com/v3/"></script>
+    </head>
+
+    <body>
+      
+      <header>
+        <div class="main-header">
+          <h1>Sentry</h1>
+          <hr/>
+          <h4><b>Let's reset your password.</b></h4>
+          <div>
+            <form id="reset-password" method="POST" action="/api/reset-password/<%= token %>">
+                <p><input type="password" name="password" placeholder="Password"></p>
+                <p><button type="submit">Reset Password</button></p>
+            </form>
+          </div>
+          <% if(error && error.length > 0) { %>
+            <div class="alert alert-danger" role="alert">
+              <%= error %>
+            </div>
+          <% } %>
+
+          <% if(info && info.length > 0) { %>
+            <div class="alert alert-info" role="alert">
+              <%- info %>
+            </div>
+          <% } %>
+          <small>Don't have an account? <a href="/register">Register</a></small>
+        </div>
+      </header>
+    </body>
+
+</html>

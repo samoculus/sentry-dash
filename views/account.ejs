@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+      <meta charset="utf-8">
+      <title>Sentry - Account</title>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" type="text/css" href="/assets/css/user.css">
+      <!-- Stripe -->
+      <script src="https://js.stripe.com/v3/"></script>
+    </head>
+
+    <body>
+      <div class="menu">
+        <small><b>sentry</b></small>
+        <a href="/logout"><b class="links">Logout</b></a>
+        <a href="/dashboard"><b class="links">Dashboard</b></a>
+        <!-- <a href="/login"><b class="links">Home</b></a> -->
+      </div>
+      <hr/>
+      <header>
+        <div class="main-header">
+          <% if(currentUser != null) { %>
+            <h3 class="title">Welcome <%= currentUser.firstName%> !</h3>
+          <%}%>
+          <hr/>
+          <!-- <h4 class="title"><b>Subscription</b></h4> -->
+          <div class="info">
+            <div style="position: relative;">
+              <h5><b>Email</b></h5>
+              <small class="label"><%= currentUser.email %></small>     
+            </div>
+            <div>
+              <h5><b>Current Card</b></h5>
+              <small class="label">
+                <img class="card-img" src='/assets/imgs/CardAssets/<%=currentUser.brand%>.png'> 
+                 ••••<%= currentUser.last4 %>
+              </small>
+            </div>
+            <div style="float: left; margin-left: 50px;">
+              <h5><b>Status</b></h5>
+              <h6 class="label"><%= status %></h6>
+            </div>
+            <div>
+              <h5><b>Next Charge</b></h5>
+              <h6 class="label"><%= date %></h6>
+            </div>     
+            <!-- <p><button class="main-button"><b>Subscribe</b></button></p> -->
+            <hr>
+            <form id="update-email" method="POST" action="/api/account/update-email">
+              <input type="email" name="email" placeholder="Email" id="email-input" required="required">
+              <p><button class="main-button" id="email-btn"><b>Update Email</b></button></p>
+            </form>
+            <div id="card-element" class="stripe-element"></div>
+            <form id="update-payment" method="POST">
+              <p>
+                <button type="submit" class="main-button" id="payment-btn">
+                  <div class="spinner hidden" id="spinner"></div>
+                  <b><span id="button-text">Update Payment Method</span></b>
+                  <input type="hidden" id="user-email" value="<%= currentUser.email %>">
+                </button>
+              </p>
+            </form>
+            <div id="subscribed">
+              <p>
+                <button type="submit" class="secondary-button" id="open-modal">
+                  <b><span id="button-text">Cancel Subscription</span></b>
+                </button>
+              </p>
+           </div>
+           <form id="resubscribe" method="POST" action="/api/account/activate-subscription" class="hidden">
+            <p>
+              <button type="submit" class="secondary-button" id="resubscribe-btn">
+                <b><span id="resubscribe-text">Resubscribe</span></b>
+              </button>
+              <input type="hidden" id="resubscribe-email" value="<%= currentUser.email %>">
+            </p>
+          </form>
+            <div id="cancel-modal" class="modal">
+              <div class="modal-content">
+                <p><h5><b>Are you sure?</b></h5></p>
+                <small>You will still have access for the remainder of your subscription. Resubscribe anytime via this dashboard!</small>          
+                <span><button class="close-modal"><b>Exit</b></button></span>
+                <span>
+                  <form id="cancel-sub" method="POST" action="/api/account/cancel-subscription">
+                    <button class="cancel-btn" id="cancelbtn"><b>Unsubscribe</b></button>
+                  </form>
+                </span>
+              </div>
+            </div>
+            </div>
+          <input type="hidden" id="cstatus" value="<%= cancel_status %>">
+          <div id="card-errors" role="alert"></div>
+          <div id="card-success" role="alert"></div>
+          <% if(error && error.length > 0) { %>
+            <div class="alert alert-danger fade-out animated" role="alert">
+              <%= error %>
+            </div>
+          <% } %>
+          <% if(info && info.length > 0) { %>
+            <div class="alert alert-info fade-out animated" role="alert">
+              <%= info %>
+            </div>
+          <% } %>
+      </div>
+      </header>
+      <script>var publishable_key = "pk_test_LKThKeqKRA3LanpOOewgHGj500Y1VEtnRM";</script>
+      <script src="/assets/js/account/payment.js"></script>
+      <script src="/assets/js/account/cancel.js"></script>
+    </body>
+</html>
