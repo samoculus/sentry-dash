@@ -5,7 +5,7 @@ Fill out the parameters in params.js & in /utils/email/email.js enter your sendg
 
 To run the application run the command npm install and then npm run dev.
 
-App will be running on localhost:3000 ! 
+App will be running on port 3000 !
 
 
 
